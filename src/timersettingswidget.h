@@ -33,8 +33,16 @@ public:
     int GetRandomIntervalTo() const { return _ui->randomTo->value(); }
     void SetRandomInterval(int from, int to);
 
+private slots:
+    void FixedIntervalChange(int);
+    void RandomIntervalChangeFrom(int);
+    void RandomIntervalChangeTo(int);
+    void ModeChange(TimerMode);
+
 signals:
-    void TimerSettingsChanged();
+    void FixedIntervalChanged(int);
+    void RandomIntervalChanged(int, int);
+    void ModeChanged(TimerMode);
 
 private:
     Ui::TimerSettingsWidget *_ui;
