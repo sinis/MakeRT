@@ -29,6 +29,8 @@ public:
 
     Phonon::AudioOutput *GetAudioOutput() { return _audioOutput; }
 
+    static MakeRT *GetInstance() { return _instance; }
+
 public slots:
     void LoadSettings();
     void SaveSettings();
@@ -36,6 +38,7 @@ public slots:
     void Alarm();
 
 private:
+    static MakeRT *_instance;
     Ui::MakeRT *_ui;
     TextNotificationWidget *_textNotificationWidget;
     SoundNotificationWidget *_soundNotificationWidget;

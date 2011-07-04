@@ -28,7 +28,15 @@ public:
 public slots:
     void SelectFileName();
     void PlayStop();
-    void StateChanged();
+    void StateChanged(Phonon::State);
+
+private slots:
+    void ActivationChange(bool);
+    void FileNameChange(QString);
+
+signals:
+    void ActivationChanged(bool);
+    void FileNameChanged(QString);
 
 private:
     Ui::SoundNotificationWidget *_ui;

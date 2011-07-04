@@ -88,7 +88,7 @@
  <connections>
   <connection>
    <sender>enable</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>singleNotificationMode</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -104,7 +104,7 @@
   </connection>
   <connection>
    <sender>enable</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>textNotification</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -120,7 +120,7 @@
   </connection>
   <connection>
    <sender>enable</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>randomNotification</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -129,14 +129,14 @@
      <y>25</y>
     </hint>
     <hint type="destinationlabel">
-     <x>46</x>
-     <y>124</y>
+     <x>56</x>
+     <y>122</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>enable</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>showEditor</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -145,8 +145,8 @@
      <y>24</y>
     </hint>
     <hint type="destinationlabel">
-     <x>103</x>
-     <y>158</y>
+     <x>109</x>
+     <y>156</y>
     </hint>
    </hints>
   </connection>
