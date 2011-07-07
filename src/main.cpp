@@ -28,6 +28,15 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
 
     MakeRT window;
+#ifdef Q_OS_SYMBIAN
+    window.showMaximized();
+#else
+    if (window.IsRunInTrayEnabled())
+    {
+
+    }
+    else window.show();
+#endif
 
     return app.exec();
 }

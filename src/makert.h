@@ -6,6 +6,7 @@
 
 #include <QWidget>
 #ifndef Q_OS_SYMBIAN
+#include <QSystemTrayIcon>
 #include "ui_makert.h"
 #else
 #include "ui_makert_s60.h"
@@ -28,14 +29,36 @@ public:
     ~MakeRT();
 
     Phonon::AudioOutput *GetAudioOutput() { return _audioOutput; }
+    bool IsRunInTrayEnabled() const { return _ui->tray->isChecked(); }
 
     static MakeRT *GetInstance() { return _instance; }
 
 public slots:
     void LoadSettings();
-    void SaveSettings();
+    //void SaveSettings();
     void SetTimer();
     void Alarm();
+
+private slots:
+    void TextMessageActivationChanged(bool);
+    void TextMessageChanged(QString);
+    void MessageListChanged(QStringList &);
+    void TextMessageModeChanged(TextNotificationWidget::Mode);
+
+    void SoundNotificationActivationChanged(bool);
+    void AudioFileNameChanged(QString);
+
+    void FixedIntervalChanged(int);
+    void RandomIntervalChanged(int, int);
+    void TimerModeChanged(TimerSettingsWidget::Mode);
+
+#ifdef Q_OS_SYMBIAN
+    void VibrationsEnabled(bool);
+#else
+    void RunAtStartupEnabled(bool);
+    void RunInTrayEnabled(bool);
+    void TrayIconClicked(QSystemTrayIcon::ActivationReason);
+#endif // Q_OS_SYMBIAN
 
 private:
     static MakeRT *_instance;
@@ -46,13 +69,15 @@ private:
     Phonon::AudioOutput *_audioOutput;
     Phonon::MediaObject *_player;
     QTimer *_timer;
-#ifdef Q_OS_SYMBIAN
+#ifndef Q_OS_SYMBIAN
+    QSystemTrayIcon *_trayIcon;
+#else
     QAction *_textNotificationAction;
     QAction *_soundNotificationAction;
     QAction *_timerSettingsAction;
     QAction *_vibrationsAction;
-    QAction *_aboutAction;
     QAction *_aboutQtAction;
+    QAction *_quitAction;
     QMenu *_menu;
     QAction *_menuAction;
     QAction *_hideAction;

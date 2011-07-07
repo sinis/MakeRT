@@ -28,7 +28,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QTextBrowser" name="textBrowser"/>
+        <widget class="QTextBrowser" name="about"/>
        </item>
       </layout>
      </widget>
@@ -96,7 +96,7 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>textBrowser</tabstop>
+  <tabstop>about</tabstop>
   <tabstop>startup</tabstop>
   <tabstop>tray</tabstop>
   <tabstop>hide</tabstop>

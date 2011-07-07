@@ -19,7 +19,7 @@ public:
     TimerSettingsWidget(QWidget *parent = 0);
     ~TimerSettingsWidget();
 
-    enum TimerMode
+    enum Mode
     {
         FixedInterval,
         RandomInterval
@@ -42,7 +42,7 @@ private slots:
 signals:
     void FixedIntervalChanged(int);
     void RandomIntervalChanged(int, int);
-    void ModeChanged(TimerMode);
+    void ModeChanged(Mode);
 
 private:
     Ui::TimerSettingsWidget *_ui;

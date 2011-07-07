@@ -49,7 +49,7 @@ TimerMode TimerSettingsWidget::GetTimerMode()
 
 // SetTimerMode
 // Takes mode from parameter and sets UI.
-void TimerSettingsWidget::SetTimerMode(TimerMode timerMode)
+void TimerSettingsWidget::SetTimerMode(Mode timerMode)
 {
     switch (timerMode)
     {
@@ -98,7 +98,7 @@ void TimerSettingsWidget::RandomIntervalChangeTo(int to)
 }
 
 // ModeChange
-void TimerSettingsWidget::ModeChange(TimerMode mode)
+void TimerSettingsWidget::ModeChange(Mode mode)
 {
     emit ModeChanged(mode);
 }
