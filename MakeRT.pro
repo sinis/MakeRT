@@ -25,14 +25,16 @@ HEADERS  += src/makert.h \
 
 FORMS    += ui/makert.ui \
     ui/textnotificationwidget.ui \
-    ui/editordialog.ui \
     ui/soundnotificationwidget.ui
+
 
 symbian: {
     LIBS += -lhwrmvibraclient
-    FORMS += ui/soundnotificationwidget_s60.ui
+    FORMS += ui/soundnotificationwidget_s60.ui \
+             ui/editordialog_s60.ui
 }
 
 !symbian: {
-    FORMS += ui/soundnotificationwidget.ui
+    FORMS += ui/soundnotificationwidget.ui \
+             ui/editordialog.ui
 }
