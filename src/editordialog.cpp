@@ -2,6 +2,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QFile>
+#include <QMessageBox>
 
 // Constructor
 EditorDialog::EditorDialog(QWidget *parent):
@@ -149,5 +150,26 @@ void EditorDialog::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Delete:
         Remove();
         break;
+    }
+}
+
+// Load
+void EditorDialog::Load()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Select file with notifications..."), QDir::homePath(), tr("Text files (*.txt);;All files (*.*)"));
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly))
+    {
+        QMessageBox::critical(this, tr("Failed!"), tr("Cannot open selected file!"));
+        return;
+    }
+
+    QByteArray line;
+    while (!(line = file.readLine()).isEmpty())
+    {
+        _ui->messageList->addItem(line);
     }
 }

@@ -34,6 +34,21 @@ public:
     Mode GetMode();
     void SetMode(Mode mode);
 
+public slots:
+    void ShowEditor();
+
+private slots:
+    void ActivationChange(bool);
+    void TextMessageChange(QString);
+    void MessageListChange();
+    void ModeChange();
+
+signals:
+    void ActivationChanged(bool);
+    void TextMessageChanged(QString);
+    void MessageListChanged(QStringList &);
+    void ModeChanged(TextNotificationWidget::Mode);
+
 private:
     Ui::TextNotificationWidget *_ui;
     EditorDialog *_editor;

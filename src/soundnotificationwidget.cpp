@@ -24,6 +24,7 @@ SoundNotificationWidget::SoundNotificationWidget(QWidget *parent):
     addAction(_goBackAction);
     _emptyAction->setSoftKeyRole(QAction::PositiveSoftKey);
     _goBackAction->setSoftKeyRole(QAction::NegativeSoftKey);
+    connect(_goBackAction, SIGNAL(triggered()), this, SLOT(hide)));
 #endif
 
     connect(_ui->enable, SIGNAL(clicked(bool)), this, SLOT(ActivationChange(bool)));

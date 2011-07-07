@@ -22,6 +22,7 @@ TimerSettingsWidget::TimerSettingsWidget(QWidget *parent):
     this->addAction(_goBackAction);
     _emptyAction->setSoftKeyRole(QAction::PositiveSoftKey);
     _goBackAction->setSoftKeyRole(QAction::NegativeSoftKey);
+    connect(_goBackAction, SIGNAL(triggered()), this, SLOT(hide()));
 #endif
 }
 
