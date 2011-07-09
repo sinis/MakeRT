@@ -35,7 +35,26 @@ MakeRT::MakeRT(QWidget *parent):
     LoadSettings();
 
 #ifdef Q_OS_SYMBIAN
-    // checkable _vibrationsAction
+    addAction(_menuAction);
+    addAction(_hideAction);
+    _menu->addAction(_textNotificationAction);
+    _menu->addAction(_soundNotificationAction);
+    _menu->addAction(_timerSettingsAction);
+    _menu->addAction(_vibrationsAction);
+    _menu->addAction(_aboutQtAction);
+    _menu->addAction(_quitAction);
+    _vibrationsAction->setCheckable(true);
+    _menuAction->setMenu(_menu);
+    _menuAction->setSoftKeyRole(QAction::PositiveSoftKey);
+    _hideAction->setSoftKeyRole(QAction::NegativeSoftKey);
+
+    connect(_textNotificationAction, SIGNAL(triggered()), _textNotificationWidget, SLOT(show()));
+    connect(_soundNotificationAction, SIGNAL(triggered()), _soundNotificationWidget, SLOT(show()));
+    connect(_timerSettingsAction, SIGNAL(triggered()), _timerSettingsWidget, SLOT(show()));
+    connect(_vibrationsAction, SIGNAL(triggered(bool)), this, SLOT(VibrationsEnabled(bool)));
+    connect(_aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(_quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(_hideAction, SIGNAL(triggered()), this, SLOT(hide()));
 #else
     _ui->tabWidget->addTab(_textNotificationWidget, tr("Text notifications settings"));
     _ui->tabWidget->addTab(_soundNotificationWidget, tr("Sound notification settigns"));
@@ -64,4 +83,30 @@ MakeRT::MakeRT(QWidget *parent):
 
     Phonon::createPath(_player, _audioOutput);
     SetTimer();
+}
+
+// Destructor
+MakeRT::~MakeRT()
+{
+    delete _ui;
+    delete _player;
+    delete _audioOutput;
+    delete _timer;
+    delete _textNotificationWidget;
+    delete _soundNotificationWidget;
+    delete _timerSettingsWidget;
+#ifdef Q_OS_SYMBIAN
+    delete _textNotificationAction;
+    delete _soundNotificationAction;
+    delete _timerSettingsAction;
+    delete _vibrationsAction;
+    delete _aboutQtAction;
+    delete _quitAction;
+    delete _menu;
+    delete _menuAction;
+    delete _hideAction;
+#else
+    delete _trayIcon;
+#endif // Q_OS_SYMBIAN
+    _instance = 0;
 }
