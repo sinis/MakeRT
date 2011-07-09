@@ -32,6 +32,8 @@ MakeRT::MakeRT(QWidget *parent):
 
     _ui->setupUi(this);
 
+    LoadSettings();
+
 #ifdef Q_OS_SYMBIAN
     // checkable _vibrationsAction
 #else
@@ -40,9 +42,26 @@ MakeRT::MakeRT(QWidget *parent):
     _ui->tabWidget->addTab(_timerSettingsWidget, tr("Timer settings"));
 
     connect(_ui->quit, SIGNAL(clicked()), qApp, SLOT(quit()));
+    connect(_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(TrayIconClicked()));
+    connect(_ui->startup, SIGNAL(toggled(bool)), this, SLOT(RunAtStartupEnabled(bool)));
+    connect(_ui->tray, SIGNAL(toggled(bool)), this, SLOT(RunInTrayEnabled(bool)));
+
+    _trayIcon->show();
 #endif // Q_OS_SYMBIAN
 
-    Phonon::createPath(_player, _output);
-    LoadSettings();
+    connect(_textNotificationWidget, SIGNAL(ActivationChanged(bool)), this, SLOT(TextMessageActivationChanged(bool)));
+    connect(_textNotificationWidget, SIGNAL(TextMessageChanged(QString)), this, SLOT(TextMessageChanged(QString)));
+    connect(_textNotificationWidget, SIGNAL(MessageListChanged(QStringList&)), this, SLOT(MessageListChanged(QStringList&)));
+    connect(_textNotificationWidget, SIGNAL(ModeChanged(TextNotificationWidget::Mode)), this, SLOT(TextMessageModeChanged(TextNotificationWidget::Mode)));
+    connect(_soundNotificationWidget, SIGNAL(ActivationChanged(bool)), this, SLOT(SoundNotificationActivationChanged(bool)));
+    connect(_soundNotificationWidget, SIGNAL(FileNameChanged(QString)), this, SLOT(AudioFileNameChanged(QString)));
+    connect(_timerSettingsWidget, SIGNAL(ModeChanged(Mode)), this, SLOT(TimerModeChanged(TimerSettingsWidget::Mode)));
+    connect(_timerSettingsWidget, SIGNAL(FixedIntervalChanged(int)), this, SLOT(FixedIntervalChanged(int)));
+    connect(_timerSettingsWidget, SIGNAL(RandomIntervalChanged(int,int)), this, SLOT(RandomIntervalChanged(int,int)));
+
+    connect(_timer, SIGNAL(timeout()), this, SLOT(Alarm()));
+
+
+    Phonon::createPath(_player, _audioOutput);
     SetTimer();
 }

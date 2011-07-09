@@ -57,7 +57,7 @@ private slots:
 #else
     void RunAtStartupEnabled(bool);
     void RunInTrayEnabled(bool);
-    void TrayIconClicked(QSystemTrayIcon::ActivationReason);
+    void TrayIconClicked();
 #endif // Q_OS_SYMBIAN
 
 private:
