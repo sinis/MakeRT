@@ -28,7 +28,7 @@
 #define TEXTMESSAGE "TextMessage"
 #define MESSAGELIST "MessageList"
 #define SOUNDNOTIFICATIONENABLED "SoundNotificationEnabled"
-#define AUDIOFILE "AudioFile"
+#define AUDIOFILENAME "AudioFile"
 #define TIMERMODE "TimerMode"
 #define FIXEDINTERVAL "FixedInterval"
 #define RANDOMINTERVALFROM "RandomIntervalFrom"
@@ -101,6 +101,7 @@ private:
     QMenu *_menu;
     QAction *_menuAction;
     QAction *_hideAction;
+    CHWRMVibra *_vibrator;
 #endif // Q_OS_SYMBIAN
 };
 

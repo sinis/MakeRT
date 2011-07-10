@@ -1,4 +1,11 @@
 #include "makert.h"
+#include <QMessageBox>
+#ifdef Q_OS_WINDOWS
+#include <windows.h>
+#elif defined Q_OS_LINUX
+#include <QFile>
+#include <QDir>
+#endif // Q_OS_WINDOWS
 
 MakeRT *MakeRT::_instance = 0;
 
@@ -36,6 +43,8 @@ MakeRT::MakeRT(QWidget *parent):
     LoadSettings();
 
 #ifdef Q_OS_SYMBIAN
+    _vibrator = CHWRMVibra::NewL();
+
     addAction(_menuAction);
     addAction(_hideAction);
     _menu->addAction(_textNotificationAction);
@@ -106,6 +115,7 @@ MakeRT::~MakeRT()
     delete _menu;
     delete _menuAction;
     delete _hideAction;
+    delete _vibrator;
 #else
     delete _trayIcon;
 #endif // Q_OS_SYMBIAN
@@ -146,3 +156,175 @@ void MakeRT::LoadSettings()
     _ui->tray->setChecked(_settings->value(RUNINTRAY, false));
 #endif // Q_OS_SYMBIAN
 }
+
+// SetTimer
+void MakeRT::SetTimer()
+{
+    int interval;
+    if (_timerSettingsWidget->GetTimerMode() == TimerSettingsWidget::FixedInterval)
+    {
+        interval = _timerSettingsWidget->GetFixedInterval();
+    }
+    else
+    {
+        int from, to;
+        from = _timerSettingsWidget->GetRandomIntervalFrom();
+        to = _timerSettingsWidget->GetRandomIntervalTo();
+        interval = qrand() % (to - from) + from;
+    }
+    _timer->start(interval*60000);
+}
+
+// Alarm
+void MakeRT::Alarm()
+{
+    if (_soundNotificationWidget->IsActive())
+    {
+        _player->enqueue(_soundNotificationWidget->GetFileName());
+        _player->play();
+    }
+
+#ifdef Q_OS_SYMBIAN
+    if (_vibrationsAction->isChecked())
+    {
+        _vibrator->StartL(3000);
+    }
+#endif // Q_OS_SYMBIAN
+
+    if (_textNotificationWidget->IsActive())
+    {
+        QString &message;
+        if (_textNotificationWidget->GetMode() == TextNotificationWidget::SingleMessageMode)
+        {
+            message = _textNotificationWidget->GetTextMessage();
+        }
+        else
+        {
+            int tmp = _textNotificationWidget->GetMessageList().count();
+            message = _textNotificationWidget->GetMessageList()[qrand() % tmp];
+        }
+        QMessageBox::information(this, tr("Make reality test!"), message);
+    }
+
+    SetTimer();
+}
+
+// TextMessageActivationChanged
+void MakeRT::TextMessageActivationChanged(bool activation)
+{
+    _settings->setValue(TEXTNOTIFICATIONENABLED, activation);
+}
+
+// TextMessageChanged
+void MakeRT::TextMessageChanged(QString message)
+{
+    _settings->setValue(TEXTMESSAGE, message);
+}
+
+// MessageListChanged
+void MakeRT::MessageListChanged(QStringList &messageList)
+{
+    _settings->beginWriteArray(MESSAGELIST);
+    for (int i = 0; i < messageList.count(); i++)
+    {
+        _settings->setArrayIndex(i);
+        _settings->setValue(MESSAGELIST, messageList[i]);
+    }
+    _settings->endArray();
+}
+
+// TextMessageModeChanged
+void MakeRT::TextMessageModeChanged(TextNotificationWidget::Mode mode)
+{
+    _settings->setValue(TEXTMESSAGEMODE, (int)mode);
+}
+
+// SoundNotificationActivationChanged
+void MakeRT::SoundNotificationActivationChanged(bool activation)
+{
+    _settings->setValue(SOUNDNOTIFICATIONENABLED, activation);
+}
+
+// AudioFileNameChanged
+void MakeRT::AudioFileNameChanged(QString fileName)
+{
+    _settings->setValue(AUDIOFILENAME, fileName);
+}
+
+// TimerModeChanged
+void MakeRT::TimerModeChanged(TimerSettingsWidget::Mode mode)
+{
+    _settings->setValue(TIMERMODE, (int)mode);
+}
+
+// FixedIntervalChanged
+void MakeRT::FixedIntervalChanged(int interval)
+{
+    _settings->setValue(FIXEDINTERVAL, interval);
+}
+
+// RandomIntervalChanged
+void MakeRT::RandomIntervalChanged(int from, int to)
+{
+    _settings->setValue(RANDOMINTERVALFROM, from);
+    _settings->setValue(RANDOMINTERVALTO, to);
+}
+
+// VibrationsEnabled
+#ifdef Q_OS_SYMBIAN
+void MakeRT::VibrationsEnabled(bool vibrations)
+{
+    _settings->setValue(VIBRATIONSENABLED, vibrations);
+}
+#else
+
+// RunAtStartupEnabled
+void MakeRT::RunAtStartupEnabled(bool startup)
+{
+    _settings->setValue(RUNATSTARTUP, startup);
+
+#ifdef Q_OS_WINDOWS
+
+#elif defined Q_OS_LINUX
+    QString dir = QDir::homePath() + "/.config/autostart/";
+    QString fileName = "MakeRT.desktop";
+    QString data;
+    if (startup)
+    {
+        if (!QDir::exists(dir))
+            QDir::mkpath(dir);
+        QFile file(dir + fileName);
+        if (!file.open(QFile::WriteOnly))
+        {
+            QMessageBox::critical(this, tr("Failed!"), tr("Cannot create autostart file!"));
+            RunAtStartupEnabled(false);
+            return;
+        }
+
+        data = "[Desktop Entry]\n";
+        data += "Type=Application\n";
+        data += "Name=MakeRT\n";
+        data += "Exec=" + qApp->applicationFilePath() + "\n";
+        file.write(data);
+        file.close();
+    }
+    else
+        QFile::remove(dir + fileName);
+#endif // Q_OS_WINDOWS
+}
+
+// RunInTrayEnabled
+void MakeRT::RunInTrayEnabled(bool tray)
+{
+    _settings->setValue(RUNINTRAY, tray);
+}
+
+// TrayIconClicked
+void MakeRT::TrayIconClicked()
+{
+    if (this->isVisible())
+        this->hide();
+    else this->show();
+}
+
+#endif // Q_OS_SYMBIAN
