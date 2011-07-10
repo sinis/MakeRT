@@ -11,7 +11,8 @@ MakeRT::MakeRT(QWidget *parent):
     _timerSettingsWidget(new TimerSettingsWidget(this)),
     _audioOutput(new Phonon::AudioOutput(Phonon::MusicCategory, this)),
     _player(new Phonon::MediaObject(this)),
-    _timer(new QTimer(this))
+    _timer(new QTimer(this)),
+    _settings(new QSettings(this))
   #ifndef Q_OS_SYMBIAN
   , _trayIcon(new QSystemTrayIcon(":/icon.png", this))
   #else
@@ -109,4 +110,39 @@ MakeRT::~MakeRT()
     delete _trayIcon;
 #endif // Q_OS_SYMBIAN
     _instance = 0;
+}
+
+// LoadSettings
+void MakeRT::LoadSettings()
+{
+    _textNotificationWidget->SetActive(_settings->value(TEXTNOTIFICATIONENABLED, true));
+    _textNotificationWidget->SetMode(_settings->value(TEXTNOTIFICATIONMODE, (int)TextNotificationWidget::RandomMessageMode));
+    _textNotificationWidget->SetTextMessage(_settings->value(TEXTMESSAGE, tr("Are you dreaming?")));
+    int size = _settings->beginReadArray(MESSAGELIST);
+    QStringList messageList;
+    if (size)
+        for (int i = 0; i < size; i++)
+        {
+            _settings->setArrayIndex(i);
+            messageList.append(_settings->value(MESSAGELIST));
+        }
+    else messageList = TextNotificationWidget::_defaultMessageList;
+    _settings->endArray();
+    _textNotificationWidget->SetMessageList(messageList);
+
+    _soundNotificationWidget->SetActive(_settings->value(SOUNDNOTIFICATIONENABLED, false));
+    _soundNotificationWidget->SetFileName(_settings->value(AUDIOFILE, ""));
+
+    _timerSettingsWidget->SetTimerMode(_settings(TIMERMODE, (int)TimerSettingsWidget::RandomInterval));
+    _timerSettingsWidget->SetFixedInterval(_settings->value(FIXEDINTERVAL, 15));
+    int from = _settings->value(RANDOMINTERVALFROM, 10);
+    int to = _settings->value(RANDOMINTERVALTO, 30);
+    _timerSettingsWidget->SetRandomInterval(from, to);
+
+#ifdef Q_OS_SYMBIAN
+    _vibrationsEnabled->setChecked(_settings->value(VIBRATIONSENABLED, true));
+#else
+    _ui->startup->setChecked(_settings(RUNATSTARTUP, false));
+    _ui->tray->setChecked(_settings->value(RUNINTRAY, false));
+#endif // Q_OS_SYMBIAN
 }

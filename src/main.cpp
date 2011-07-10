@@ -10,6 +10,7 @@
 #include <QTextCodec>
 #include <QTranslator>
 #include <QLocale>
+#include <QDateTime>
 #include "makert.h"
 
 int main(int argc, char *argv[])
@@ -26,6 +27,8 @@ int main(int argc, char *argv[])
     QString locale = QLocale::system().name();
     translator.load(QString(":/makert_") + locale);
     app.installTranslator(&translator);
+
+    qsrand(QDateTime::currentMSecsSinceEpoch());
 
     MakeRT window;
 #ifdef Q_OS_SYMBIAN

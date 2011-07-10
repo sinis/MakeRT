@@ -17,9 +17,28 @@
 #include <AudioOutput>
 #include <MediaObject>
 #include <QTimer>
+#include <QSettings>
 #include "textnotificationwidget.h"
 #include "soundnotificationwidget.h"
 #include "timersettingswidget.h"
+
+// Keys
+#define TEXTNOTIFICATIONENABLED "TextNotificationEnabled"
+#define TEXTNOTIFICATIONMODE "TextNotificationMode"
+#define TEXTMESSAGE "TextMessage"
+#define MESSAGELIST "MessageList"
+#define SOUNDNOTIFICATIONENABLED "SoundNotificationEnabled"
+#define AUDIOFILE "AudioFile"
+#define TIMERMODE "TimerMode"
+#define FIXEDINTERVAL "FixedInterval"
+#define RANDOMINTERVALFROM "RandomIntervalFrom"
+#define RANDOMINTERVALTO "RandomIntervalTo"
+#ifdef Q_OS_SYMBIAN
+#define VIBRATIONSENABLED "VibrationsEnabled"
+#else
+#define RUNATSTARTUP "RunAtStartup"
+#define RUNINTRAY "RunInTray"
+#endif // Q_OS_SYMBIAN
 
 class MakeRT: public QWidget
 {
@@ -69,6 +88,7 @@ private:
     Phonon::AudioOutput *_audioOutput;
     Phonon::MediaObject *_player;
     QTimer *_timer;
+    QSettings *_settings;
 #ifndef Q_OS_SYMBIAN
     QSystemTrayIcon *_trayIcon;
 #else

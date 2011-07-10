@@ -34,6 +34,8 @@ public:
     Mode GetMode();
     void SetMode(Mode mode);
 
+    static QStringList _defaultMessageList;
+
 public slots:
     void ShowEditor();
 

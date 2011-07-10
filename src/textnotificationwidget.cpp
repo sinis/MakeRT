@@ -1,5 +1,7 @@
 #include "textnotificationwidget.h"
 
+QStringList TextNotificationWidget::_defaultMessageList;
+
 // Constructor
 TextNotificationWidget::TextNotificationWidget(QWidget *parent):
     QWidget(parent),
@@ -26,6 +28,14 @@ TextNotificationWidget::TextNotificationWidget(QWidget *parent):
 #endif // Q_OS_SYMBIAN
 
     _editor->setModal(true);
+    _defaultMessageList.clear();
+    _defaultMessageList.append(tr("Are you dreaming?"));
+    _defaultMessageList.append(tr("How did you get here?"));
+    _defaultMessageList.append(tr("So... what's the time?"));
+    _defaultMessageList.append(tr("Isn't there anything strange?"));
+    _defaultMessageList.append(tr("Reality check time!"));
+    _defaultMessageList.append(tr("I'm afraid we're in dream."));
+    _defaultMessageList.append(tr("Can you fly?"));
 }
 
 // Destructor
