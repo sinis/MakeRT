@@ -13,13 +13,13 @@ MakeRT *MakeRT::_instance = 0;
 MakeRT::MakeRT(QWidget *parent):
     QWidget(parent),
     _ui(new Ui::MakeRT),
-    _textNotificationWidget(new TextNotificationWidget(this)),
-    _soundNotificationWidget(new SoundNotificationWidget(this)),
-    _timerSettingsWidget(new TimerSettingsWidget(this)),
     _audioOutput(new Phonon::AudioOutput(Phonon::MusicCategory, this)),
     _player(new Phonon::MediaObject(this)),
     _timer(new QTimer(this)),
-    _settings(new QSettings(this))
+    _settings(new QSettings(this)),
+    _textNotificationWidget(new TextNotificationWidget(this)),
+    _soundNotificationWidget(new SoundNotificationWidget(this)),
+    _timerSettingsWidget(new TimerSettingsWidget(this))
   #ifndef Q_OS_SYMBIAN
   , _trayIcon(new QSystemTrayIcon(QIcon(":/icon.png"), this))
   #else
@@ -90,9 +90,12 @@ MakeRT::MakeRT(QWidget *parent):
 
     connect(_timer, SIGNAL(timeout()), this, SLOT(Alarm()));
 
-
     Phonon::createPath(_player, _audioOutput);
     SetTimer();
+    _soundNotificationWidget->SetAudioOutput(_audioOutput);
+
+    if (this->IsRunInTrayEnabled())
+        _trayIcon->show();
 }
 
 // Destructor
@@ -306,8 +309,9 @@ void MakeRT::RunAtStartupEnabled(bool startup)
     QString data;
     if (startup)
     {
-        if (!QDir::exists(dir))
-            QDir::mkpath(dir);
+        QDir tmp(dir);
+        if (!tmp.exists())
+            tmp.mkpath(dir);
         QFile file(dir + fileName);
         if (!file.open(QFile::WriteOnly))
         {
@@ -320,7 +324,7 @@ void MakeRT::RunAtStartupEnabled(bool startup)
         data += "Type=Application\n";
         data += "Name=MakeRT\n";
         data += "Exec=" + qApp->applicationFilePath() + "\n";
-        file.write(data);
+        file.write(data.toStdString().c_str());
         file.close();
     }
     else

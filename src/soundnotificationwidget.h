@@ -12,6 +12,7 @@
 #include "ui_soundnotificationwidget.h"
 #endif // Q_OS_SYMBIAN
 #include <MediaObject>
+#include <AudioOutput>
 
 class SoundNotificationWidget: public QWidget
 {
@@ -24,6 +25,7 @@ public:
     void SetActive(bool active) { _ui->enable->setChecked(active); }
     const QString &GetFileName() const { return _ui->fileName->text(); }
     void SetFileName(const QString &fileName) { _ui->fileName->setText(fileName); }
+    void SetAudioOutput(Phonon::AudioOutput *output);
 
 public slots:
     void SelectFileName();

@@ -103,7 +103,7 @@ void EditorDialog::Edit()
     bool ok;
     //int current = _ui->messageList->currentRow();
     QString text = _ui->messageList->currentItem()->text();
-    text = QInputDialog::getText(this, tr("Edit notification"), tr("Messate:"), QLineEdit::Normal, text, &ok);
+    text = QInputDialog::getText(this, tr("Edit notification"), tr("Message:"), QLineEdit::Normal, text, &ok);
     if (ok)
     {
         _ui->messageList->currentItem()->setText(text);

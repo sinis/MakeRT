@@ -82,13 +82,13 @@ private slots:
 private:
     static MakeRT *_instance;
     Ui::MakeRT *_ui;
-    TextNotificationWidget *_textNotificationWidget;
-    SoundNotificationWidget *_soundNotificationWidget;
-    TimerSettingsWidget *_timerSettingsWidget;
     Phonon::AudioOutput *_audioOutput;
     Phonon::MediaObject *_player;
     QTimer *_timer;
     QSettings *_settings;
+    TextNotificationWidget *_textNotificationWidget;
+    SoundNotificationWidget *_soundNotificationWidget;
+    TimerSettingsWidget *_timerSettingsWidget;
 #ifndef Q_OS_SYMBIAN
     QSystemTrayIcon *_trayIcon;
 #else

@@ -16,9 +16,6 @@ SoundNotificationWidget::SoundNotificationWidget(QWidget *parent):
 {
     _ui->setupUi(this);
 
-    Phonon::AudioOutput *output = MakeRT::GetInstance()->GetAudioOutput();
-    Phonon::createPath(_player, output);
-
 #ifdef Q_OS_SYMBIAN
     addAction(_emptyAction);
     addAction(_goBackAction);
@@ -106,4 +103,10 @@ void SoundNotificationWidget::StateChanged(Phonon::State state)
         _ui->play->setText(tr("Play"));
         break;
     }
+}
+
+// SetAudioOutput
+void SoundNotificationWidget::SetAudioOutput(Phonon::AudioOutput *output)
+{
+    Phonon::createPath(_player, output);
 }
