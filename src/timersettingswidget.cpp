@@ -38,13 +38,11 @@ TimerSettingsWidget::~TimerSettingsWidget()
 
 // GetTimerMode
 // Takes mode from UI and returns it as TimerMode.
-TimerMode TimerSettingsWidget::GetTimerMode()
+TimerSettingsWidget::Mode TimerSettingsWidget::GetTimerMode()
 {
-    TimerMode mode;
     if (_ui->fixedInterval->isChecked())
-        mode = FixedInterval;
-    else mode = RandomInterval;
-    return mode;
+        return FixedInterval;
+    else return RandomInterval;
 }
 
 // SetTimerMode

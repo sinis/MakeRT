@@ -23,9 +23,7 @@ HEADERS  += src/makert.h \
     src/soundnotificationwidget.h \
     src/timersettingswidget.h
 
-FORMS    += ui/makert.ui \
-    ui/textnotificationwidget.ui \
-    ui/soundnotificationwidget.ui \
+FORMS    += ui/textnotificationwidget.ui \
     ui/timersettingswidget.ui
 
 symbian: {
@@ -37,5 +35,6 @@ symbian: {
 
 !symbian: {
     FORMS += ui/soundnotificationwidget.ui \
-             ui/editordialog.ui
+             ui/editordialog.ui \
+             ui/makert.ui
 }

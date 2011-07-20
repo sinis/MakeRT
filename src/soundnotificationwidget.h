@@ -22,7 +22,7 @@ public:
 
     bool IsActive() const { return _ui->enable->isChecked(); }
     void SetActive(bool active) { _ui->enable->setChecked(active); }
-    const QString &GetFileName() const { _ui->fileName->text(); }
+    const QString &GetFileName() const { return _ui->fileName->text(); }
     void SetFileName(const QString &fileName) { _ui->fileName->setText(fileName); }
 
 public slots:

@@ -6,7 +6,7 @@
 
 // Constructor
 EditorDialog::EditorDialog(QWidget *parent):
-    QWidget(parent),
+    QDialog(parent),
     _ui(new Ui::EditorDialog)
   #ifdef Q_OS_SYMBIAN
   , _addNewAction(new QAction(tr("Add new"), this)),
@@ -101,7 +101,7 @@ void EditorDialog::AddNew()
 void EditorDialog::Edit()
 {
     bool ok;
-    int current = _ui->messageList->currentRow();
+    //int current = _ui->messageList->currentRow();
     QString text = _ui->messageList->currentItem()->text();
     text = QInputDialog::getText(this, tr("Edit notification"), tr("Messate:"), QLineEdit::Normal, text, &ok);
     if (ok)

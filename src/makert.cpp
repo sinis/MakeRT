@@ -1,11 +1,11 @@
 #include "makert.h"
 #include <QMessageBox>
-#ifdef Q_OS_WINDOWS
+#ifdef Q_OS_WIN
 #include <windows.h>
 #elif defined Q_OS_LINUX
 #include <QFile>
 #include <QDir>
-#endif // Q_OS_WINDOWS
+#endif // Q_OS_WIN
 
 MakeRT *MakeRT::_instance = 0;
 
@@ -21,7 +21,7 @@ MakeRT::MakeRT(QWidget *parent):
     _timer(new QTimer(this)),
     _settings(new QSettings(this))
   #ifndef Q_OS_SYMBIAN
-  , _trayIcon(new QSystemTrayIcon(":/icon.png", this))
+  , _trayIcon(new QSystemTrayIcon(QIcon(":/icon.png"), this))
   #else
   , _textNotificationAction(new QAction(tr("Text notifications"), this)),
     _soundNotificationAction(new QAction(tr("Sound notification"), this)),
@@ -125,10 +125,10 @@ MakeRT::~MakeRT()
 // LoadSettings
 void MakeRT::LoadSettings()
 {
-    _textNotificationWidget->SetActive(_settings->value(TEXTNOTIFICATIONENABLED, true));
-    _textNotificationWidget->SetMode(_settings->value(TEXTNOTIFICATIONMODE, (int)TextNotificationWidget::RandomMessageMode));
-    _textNotificationWidget->SetTextMessage(_settings->value(TEXTMESSAGE, tr("Are you dreaming?")));
-    int size = _settings->beginReadArray(MESSAGELIST);
+    _textNotificationWidget->SetActive(_settings->value(TEXTNOTIFICATIONENABLED, true).toBool());
+    _textNotificationWidget->SetMode((TextNotificationWidget::Mode)_settings->value(TEXTNOTIFICATIONMODE, (int)TextNotificationWidget::RandomMessageMode).toInt());
+    _textNotificationWidget->SetTextMessage(_settings->value(TEXTMESSAGE, tr("Are you dreaming?")).toString());
+    /*int size = _settings->beginReadArray(MESSAGELIST);
     QStringList messageList;
     if (size)
         for (int i = 0; i < size; i++)
@@ -137,23 +137,23 @@ void MakeRT::LoadSettings()
             messageList.append(_settings->value(MESSAGELIST));
         }
     else messageList = TextNotificationWidget::_defaultMessageList;
-    _settings->endArray();
-    _textNotificationWidget->SetMessageList(messageList);
+    _settings->endArray();*/
+    _textNotificationWidget->SetMessageList(_settings->value(MESSAGELIST, TextNotificationWidget::_defaultMessageList).toStringList());
 
-    _soundNotificationWidget->SetActive(_settings->value(SOUNDNOTIFICATIONENABLED, false));
-    _soundNotificationWidget->SetFileName(_settings->value(AUDIOFILE, ""));
+    _soundNotificationWidget->SetActive(_settings->value(SOUNDNOTIFICATIONENABLED, false).toBool());
+    _soundNotificationWidget->SetFileName(_settings->value(AUDIOFILENAME, "").toString());
 
-    _timerSettingsWidget->SetTimerMode(_settings(TIMERMODE, (int)TimerSettingsWidget::RandomInterval));
-    _timerSettingsWidget->SetFixedInterval(_settings->value(FIXEDINTERVAL, 15));
-    int from = _settings->value(RANDOMINTERVALFROM, 10);
-    int to = _settings->value(RANDOMINTERVALTO, 30);
+    _timerSettingsWidget->SetTimerMode((TimerSettingsWidget::Mode)_settings->value(TIMERMODE, (int)TimerSettingsWidget::RandomInterval).toInt());
+    _timerSettingsWidget->SetFixedInterval(_settings->value(FIXEDINTERVAL, 15).toInt());
+    int from = _settings->value(RANDOMINTERVALFROM, 10).toInt();
+    int to = _settings->value(RANDOMINTERVALTO, 30).toInt();
     _timerSettingsWidget->SetRandomInterval(from, to);
 
 #ifdef Q_OS_SYMBIAN
     _vibrationsEnabled->setChecked(_settings->value(VIBRATIONSENABLED, true));
 #else
-    _ui->startup->setChecked(_settings(RUNATSTARTUP, false));
-    _ui->tray->setChecked(_settings->value(RUNINTRAY, false));
+    _ui->startup->setChecked(_settings->value(RUNATSTARTUP, false).toBool());
+    _ui->tray->setChecked(_settings->value(RUNINTRAY, false).toBool());
 #endif // Q_OS_SYMBIAN
 }
 
@@ -193,7 +193,7 @@ void MakeRT::Alarm()
 
     if (_textNotificationWidget->IsActive())
     {
-        QString &message;
+        QString message;
         if (_textNotificationWidget->GetMode() == TextNotificationWidget::SingleMessageMode)
         {
             message = _textNotificationWidget->GetTextMessage();
@@ -236,7 +236,7 @@ void MakeRT::MessageListChanged(QStringList &messageList)
 // TextMessageModeChanged
 void MakeRT::TextMessageModeChanged(TextNotificationWidget::Mode mode)
 {
-    _settings->setValue(TEXTMESSAGEMODE, (int)mode);
+    _settings->setValue(TEXTNOTIFICATIONMODE, (int)mode);
 }
 
 // SoundNotificationActivationChanged
@@ -283,8 +283,23 @@ void MakeRT::RunAtStartupEnabled(bool startup)
 {
     _settings->setValue(RUNATSTARTUP, startup);
 
-#ifdef Q_OS_WINDOWS
-
+#ifdef Q_OS_WIN
+    HKEY key;
+    RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_ALL_ACCESS, &key);
+    if (startup)
+    {
+        QString appFileName = qApp->applicationFilePath();
+        if (RegSetValueExA(key, "MakeRT", 0, REG_SZ, (BYTE*)appFileName.toStdString().c_str(), appFileName.length()) != ERROR_SUCCESS)
+        {
+            QMessageBox::critical(this, tr("Failed!"), tr("Cannot set autostart in registry."));
+            RunAtStartupEnabled(false);
+        }
+    }
+    else
+    {
+        RegDeleteValueA(key, "MakeRT");
+    }
+    RegCloseKey(key);
 #elif defined Q_OS_LINUX
     QString dir = QDir::homePath() + "/.config/autostart/";
     QString fileName = "MakeRT.desktop";
@@ -310,7 +325,7 @@ void MakeRT::RunAtStartupEnabled(bool startup)
     }
     else
         QFile::remove(dir + fileName);
-#endif // Q_OS_WINDOWS
+#endif // Q_OS_WIN
 }
 
 // RunInTrayEnabled

@@ -64,7 +64,7 @@ void TextNotificationWidget::SetMode(Mode mode)
 }
 
 // GetMode
-void TextNotificationWidget::GetMode()
+TextNotificationWidget::Mode TextNotificationWidget::GetMode()
 {
     if (_ui->singleNotificationMode->isChecked())
         return SingleMessageMode;

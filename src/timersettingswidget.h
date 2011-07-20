@@ -10,7 +10,6 @@
 #ifdef Q_OS_SYMBIAN
 #include <QAction>
 #endif // Q_OS_SYMBIAN
-#include "makert.h"
 
 class TimerSettingsWidget: public QWidget
 {
@@ -25,8 +24,8 @@ public:
         RandomInterval
     };
 
-    TimerMode GetTimerMode() const;
-    void SetTimerMode(TimerMode timerMode);
+    TimerSettingsWidget::Mode GetTimerMode();
+    void SetTimerMode(Mode timerMode);
     int GetFixedInterval() const { return _ui->interval->value(); }
     void SetFixedInterval(int interval) { _ui->interval->setValue(interval); }
     int GetRandomIntervalFrom() const { return _ui->randomFrom->value(); }
@@ -37,7 +36,7 @@ private slots:
     void FixedIntervalChange(int);
     void RandomIntervalChangeFrom(int);
     void RandomIntervalChangeTo(int);
-    void ModeChange(TimerMode);
+    void ModeChange(Mode);
 
 signals:
     void FixedIntervalChanged(int);
