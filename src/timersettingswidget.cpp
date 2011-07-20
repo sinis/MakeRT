@@ -12,7 +12,7 @@ TimerSettingsWidget::TimerSettingsWidget(QWidget *parent):
 {
     _ui->setupUi(this);
 
-    connect(_ui->fixedInterval, SIGNAL(toggled(bool)), this, SLOT(ModeChange(TimerMode)));
+    connect(_ui->fixedInterval, SIGNAL(toggled(bool)), this, SLOT(ModeChange()));
     connect(_ui->interval, SIGNAL(valueChanged(int)), this, SLOT(FixedIntervalChange(int)));
     connect(_ui->randomFrom, SIGNAL(valueChanged(int)), this, SLOT(RandomIntervalChangeFrom(int)));
     connect(_ui->randomTo, SIGNAL(valueChanged(int)), this, SLOT(RandomIntervalChangeTo(int)));
@@ -96,7 +96,7 @@ void TimerSettingsWidget::RandomIntervalChangeTo(int to)
 }
 
 // ModeChange
-void TimerSettingsWidget::ModeChange(Mode mode)
+void TimerSettingsWidget::ModeChange()
 {
-    emit ModeChanged(mode);
+    emit ModeChanged(GetTimerMode());
 }

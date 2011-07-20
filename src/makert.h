@@ -48,6 +48,7 @@ public:
     ~MakeRT();
 
     Phonon::AudioOutput *GetAudioOutput() { return _audioOutput; }
+    Phonon::MediaObject *GetPlayer() { return _player; }
     bool IsRunInTrayEnabled() const { return _ui->tray->isChecked(); }
 
     static MakeRT *GetInstance() { return _instance; }

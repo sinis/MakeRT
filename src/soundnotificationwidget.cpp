@@ -5,10 +5,10 @@
 #include "makert.h"
 
 // Constructor
-SoundNotificationWidget::SoundNotificationWidget(QWidget *parent):
+SoundNotificationWidget::SoundNotificationWidget(QWidget *parent, Phonon::MediaObject *player):
     QWidget(parent),
     _ui(new Ui::SoundNotificationWidget),
-    _player(new Phonon::MediaObject(this))
+    _player(player)
   #ifdef Q_OS_SYMBIAN
   , _emptyAction(new QAction("", this)),
     _goBackAction(new QAction(tr("Go back"), this))
@@ -62,7 +62,7 @@ void SoundNotificationWidget::FileNameChange(QString fileName)
 // It emits FileNameChanged() signal on Symbian.
 void SoundNotificationWidget::SelectFileName()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Select audio file..."), "", "Audio files (*.wav, *.mp3, *.ogg);;All files (*.*)");
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Select audio file..."), "", "Audio files (*.wav *.mp3 *.ogg);;All files (*.*)");
     if (!fileName.isEmpty())
     {
         _ui->fileName->setText(fileName);
@@ -76,7 +76,7 @@ void SoundNotificationWidget::SelectFileName()
 // Checks if file exists and plays it.
 void SoundNotificationWidget::PlayStop()
 {
-    if (_player->state() == Phonon::StoppedState)
+    if (_player->state() != Phonon::PlayingState)
     {
         QString fileName = _ui->fileName->text();
         if (!QFile::exists(fileName))
@@ -108,5 +108,5 @@ void SoundNotificationWidget::StateChanged(Phonon::State state)
 // SetAudioOutput
 void SoundNotificationWidget::SetAudioOutput(Phonon::AudioOutput *output)
 {
-    Phonon::createPath(_player, output);
+    _ui->volumeSlider->setAudioOutput(output);
 }

@@ -36,12 +36,12 @@ private slots:
     void FixedIntervalChange(int);
     void RandomIntervalChangeFrom(int);
     void RandomIntervalChangeTo(int);
-    void ModeChange(Mode);
+    void ModeChange();
 
 signals:
     void FixedIntervalChanged(int);
     void RandomIntervalChanged(int, int);
-    void ModeChanged(Mode);
+    void ModeChanged(TimerSettingsWidget::Mode);
 
 private:
     Ui::TimerSettingsWidget *_ui;

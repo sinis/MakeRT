@@ -18,7 +18,7 @@ MakeRT::MakeRT(QWidget *parent):
     _timer(new QTimer(this)),
     _settings(new QSettings(this)),
     _textNotificationWidget(new TextNotificationWidget(this)),
-    _soundNotificationWidget(new SoundNotificationWidget(this)),
+    _soundNotificationWidget(new SoundNotificationWidget(this, _player)),
     _timerSettingsWidget(new TimerSettingsWidget(this))
   #ifndef Q_OS_SYMBIAN
   , _trayIcon(new QSystemTrayIcon(QIcon(":/icon.png"), this))
@@ -94,8 +94,9 @@ MakeRT::MakeRT(QWidget *parent):
     SetTimer();
     _soundNotificationWidget->SetAudioOutput(_audioOutput);
 
-    if (this->IsRunInTrayEnabled())
-        _trayIcon->show();
+    _trayIcon->show();
+
+    this->adjustSize();
 }
 
 // Destructor
