@@ -89,8 +89,7 @@ void SoundNotificationWidget::PlayStop()
     }
     else
     {
-        _player->stop();
-        _player->clearQueue();
+        _player->clear();
     }
 }
 
