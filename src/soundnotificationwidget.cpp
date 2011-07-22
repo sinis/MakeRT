@@ -39,7 +39,6 @@ SoundNotificationWidget::SoundNotificationWidget(QWidget *parent, Phonon::MediaO
 SoundNotificationWidget::~SoundNotificationWidget()
 {
     delete _ui;
-    delete _player;
 #ifdef Q_OS_SYMBIAN
     delete _emptyAction;
     delete _goBackAction;
@@ -62,7 +61,8 @@ void SoundNotificationWidget::FileNameChange(QString fileName)
 // It emits FileNameChanged() signal on Symbian.
 void SoundNotificationWidget::SelectFileName()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Select audio file..."), "", "Audio files (*.wav *.mp3 *.ogg);;All files (*.*)");
+    QString fileName = _ui->fileName->text();
+    fileName = QFileDialog::getOpenFileName(this, tr("Select audio file..."), fileName, "Audio files (*.wav *.mp3 *.ogg);;All files (*.*)");
     if (!fileName.isEmpty())
     {
         _ui->fileName->setText(fileName);
@@ -88,7 +88,10 @@ void SoundNotificationWidget::PlayStop()
         _player->play();
     }
     else
+    {
         _player->stop();
+        _player->clearQueue();
+    }
 }
 
 // StateChanged

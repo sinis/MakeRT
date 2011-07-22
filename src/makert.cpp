@@ -84,9 +84,12 @@ MakeRT::MakeRT(QWidget *parent):
     connect(_textNotificationWidget, SIGNAL(ModeChanged(TextNotificationWidget::Mode)), this, SLOT(TextMessageModeChanged(TextNotificationWidget::Mode)));
     connect(_soundNotificationWidget, SIGNAL(ActivationChanged(bool)), this, SLOT(SoundNotificationActivationChanged(bool)));
     connect(_soundNotificationWidget, SIGNAL(FileNameChanged(QString)), this, SLOT(AudioFileNameChanged(QString)));
-    connect(_timerSettingsWidget, SIGNAL(ModeChanged(Mode)), this, SLOT(TimerModeChanged(TimerSettingsWidget::Mode)));
+    connect(_timerSettingsWidget, SIGNAL(ModeChanged(TimerSettingsWidget::Mode)), this, SLOT(TimerModeChanged(TimerSettingsWidget::Mode)));
     connect(_timerSettingsWidget, SIGNAL(FixedIntervalChanged(int)), this, SLOT(FixedIntervalChanged(int)));
     connect(_timerSettingsWidget, SIGNAL(RandomIntervalChanged(int,int)), this, SLOT(RandomIntervalChanged(int,int)));
+    connect(_timerSettingsWidget, SIGNAL(ModeChanged(TimerSettingsWidget::Mode)), this, SLOT(SetTimer()));
+    connect(_timerSettingsWidget, SIGNAL(FixedIntervalChanged(int)), this, SLOT(SetTimer()));
+    connect(_timerSettingsWidget, SIGNAL(RandomIntervalChanged(int,int)), this, SLOT(SetTimer()));
 
     connect(_timer, SIGNAL(timeout()), this, SLOT(Alarm()));
 
@@ -132,21 +135,9 @@ void MakeRT::LoadSettings()
     _textNotificationWidget->SetActive(_settings->value(TEXTNOTIFICATIONENABLED, true).toBool());
     _textNotificationWidget->SetMode((TextNotificationWidget::Mode)_settings->value(TEXTNOTIFICATIONMODE, (int)TextNotificationWidget::RandomMessageMode).toInt());
     _textNotificationWidget->SetTextMessage(_settings->value(TEXTMESSAGE, tr("Are you dreaming?")).toString());
-    /*int size = _settings->beginReadArray(MESSAGELIST);
-    QStringList messageList;
-    if (size)
-        for (int i = 0; i < size; i++)
-        {
-            _settings->setArrayIndex(i);
-            messageList.append(_settings->value(MESSAGELIST));
-        }
-    else messageList = TextNotificationWidget::_defaultMessageList;
-    _settings->endArray();*/
     _textNotificationWidget->SetMessageList(_settings->value(MESSAGELIST, TextNotificationWidget::_defaultMessageList).toStringList());
-
     _soundNotificationWidget->SetActive(_settings->value(SOUNDNOTIFICATIONENABLED, false).toBool());
     _soundNotificationWidget->SetFileName(_settings->value(AUDIOFILENAME, "").toString());
-
     _timerSettingsWidget->SetTimerMode((TimerSettingsWidget::Mode)_settings->value(TIMERMODE, (int)TimerSettingsWidget::RandomInterval).toInt());
     _timerSettingsWidget->SetFixedInterval(_settings->value(FIXEDINTERVAL, 15).toInt());
     int from = _settings->value(RANDOMINTERVALFROM, 10).toInt();
@@ -228,13 +219,7 @@ void MakeRT::TextMessageChanged(QString message)
 // MessageListChanged
 void MakeRT::MessageListChanged(QStringList &messageList)
 {
-    _settings->beginWriteArray(MESSAGELIST);
-    for (int i = 0; i < messageList.count(); i++)
-    {
-        _settings->setArrayIndex(i);
-        _settings->setValue(MESSAGELIST, messageList[i]);
-    }
-    _settings->endArray();
+    _settings->setValue(MESSAGELIST, messageList);
 }
 
 // TextMessageModeChanged

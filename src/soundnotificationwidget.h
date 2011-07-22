@@ -23,7 +23,7 @@ public:
 
     bool IsActive() const { return _ui->enable->isChecked(); }
     void SetActive(bool active) { _ui->enable->setChecked(active); }
-    const QString &GetFileName() const { return _ui->fileName->text(); }
+    const QString GetFileName() const { return _ui->fileName->text(); }
     void SetFileName(const QString &fileName) { _ui->fileName->setText(fileName); }
     void SetPlayer(Phonon::MediaObject *player) { _player = player; }
     void SetAudioOutput(Phonon::AudioOutput *output);

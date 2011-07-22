@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setApplicationName("MakeRT");
     app.setApplicationVersion("0.4");
+    app.setOrganizationName("Sinis");
     app.setQuitOnLastWindowClosed(false);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));

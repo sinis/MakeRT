@@ -27,9 +27,9 @@ public:
 
     bool IsActive() const { return _ui->enable->isChecked(); }
     void SetActive(bool active) { _ui->enable->setChecked(active); }
-    const QString &GetTextMessage() const { return _ui->textNotification->text(); }
+    const QString GetTextMessage() const { return _ui->textNotification->text(); }
     void SetTextMessage(const QString &message) { _ui->textNotification->setText(message); }
-    const QStringList &GetMessageList() const { return _messageList; }
+    const QStringList GetMessageList() const { return _messageList; }
     void SetMessageList(const QStringList &messageList) { _messageList = messageList; }
     Mode GetMode();
     void SetMode(Mode mode);
