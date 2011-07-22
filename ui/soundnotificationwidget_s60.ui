@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>SoundNotificationWidget</class>
  <widget class="QWidget" name="SoundNotificationWidget">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -49,6 +52,12 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
@@ -59,7 +68,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="Phonon::VolumeSlider" name="volumeSlider">
+        <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -135,6 +144,22 @@
     <hint type="destinationlabel">
      <x>186</x>
      <y>85</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enable</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>fileName</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>106</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>105</x>
+     <y>44</y>
     </hint>
    </hints>
   </connection>

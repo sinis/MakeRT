@@ -4,17 +4,24 @@
 #ifndef SOUNDNOTIFICATIONWIDGET_H
 #define SOUNDNOTIFICATIONWIDGET_H
 
-#include <QWidget>
+#include <QObject>
 #ifdef Q_OS_SYMBIAN
+#include <QDialog>
 #include "ui_soundnotificationwidget_s60.h"
 #include <QAction>
 #else
+#include <QWidget>
 #include "ui_soundnotificationwidget.h"
 #endif // Q_OS_SYMBIAN
 #include <MediaObject>
 #include <AudioOutput>
 
-class SoundNotificationWidget: public QWidget
+class SoundNotificationWidget: public
+        #ifdef Q_OS_SYMBIAN
+        QDialog
+        #else
+        QWidget
+        #endif // Q_OS_SYMBIAN
 {
     Q_OBJECT
 public:

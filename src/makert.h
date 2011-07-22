@@ -39,6 +39,7 @@
 #define RUNATSTARTUP "RunAtStartup"
 #define RUNINTRAY "RunInTray"
 #endif // Q_OS_SYMBIAN
+#define VOLUME "Volume"
 
 class MakeRT: public QWidget
 {
@@ -49,7 +50,9 @@ public:
 
     Phonon::AudioOutput *GetAudioOutput() { return _audioOutput; }
     Phonon::MediaObject *GetPlayer() { return _player; }
+#ifndef Q_OS_SYMBIAN
     bool IsRunInTrayEnabled() const { return _ui->tray->isChecked(); }
+#endif // Q_OS_SYMBIAN
 
     static MakeRT *GetInstance() { return _instance; }
 
@@ -79,6 +82,8 @@ private slots:
     void RunInTrayEnabled(bool);
     void TrayIconClicked();
 #endif // Q_OS_SYMBIAN
+
+    void VolumeChanged(qreal volume);
 
 private:
     static MakeRT *_instance;

@@ -4,7 +4,11 @@ QStringList TextNotificationWidget::_defaultMessageList;
 
 // Constructor
 TextNotificationWidget::TextNotificationWidget(QWidget *parent):
+    #ifdef Q_OS_SYMBIAN
+    QDialog(parent),
+    #else
     QWidget(parent),
+    #endif // Q_OS_SYMBIAN
     _ui(new Ui::TextNotificationWidget),
     _editor(new EditorDialog(this))
   #ifdef Q_OS_SYMBIAN

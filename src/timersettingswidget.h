@@ -8,10 +8,16 @@
 #include <QWidget>
 #include "ui_timersettingswidget.h"
 #ifdef Q_OS_SYMBIAN
+#include <QDialog>
 #include <QAction>
 #endif // Q_OS_SYMBIAN
 
-class TimerSettingsWidget: public QWidget
+class TimerSettingsWidget: public
+        #ifdef Q_OS_SYMBIAN
+        QDialog
+        #else
+        QWidget
+        #endif // Q_OS_SYMBIAN
 {
     Q_OBJECT
 public:

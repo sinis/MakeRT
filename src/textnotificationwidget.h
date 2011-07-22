@@ -4,15 +4,20 @@
 #ifndef TEXTNOTIFICATIONWIDGET_H
 #define TEXTNOTIFICATIONWIDGET_H
 
-#include <QWidget>
 #include "ui_textnotificationwidget.h"
 #ifdef Q_OS_SYMBIAN
+#include <QDialog>
 #include <QAction>
 #endif // Q_OS_SYMBIAN
 #include <QStringList>
 #include "editordialog.h"
 
-class TextNotificationWidget: public QWidget
+class TextNotificationWidget: public
+        #ifdef Q_OS_SYMBIAN
+        QDialog
+        #else
+        QWidget
+        #endif // Q_OS_SYMBIAN
 {
     Q_OBJECT
 public:

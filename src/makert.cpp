@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QDir>
 #endif // Q_OS_WIN
+#include <QDesktopWidget>
 
 MakeRT *MakeRT::_instance = 0;
 
@@ -58,13 +59,20 @@ MakeRT::MakeRT(QWidget *parent):
     _menuAction->setSoftKeyRole(QAction::PositiveSoftKey);
     _hideAction->setSoftKeyRole(QAction::NegativeSoftKey);
 
-    connect(_textNotificationAction, SIGNAL(triggered()), _textNotificationWidget, SLOT(show()));
-    connect(_soundNotificationAction, SIGNAL(triggered()), _soundNotificationWidget, SLOT(show()));
-    connect(_timerSettingsAction, SIGNAL(triggered()), _timerSettingsWidget, SLOT(show()));
+    connect(_textNotificationAction, SIGNAL(triggered()), _textNotificationWidget, SLOT(showMaximized()));
+    connect(_soundNotificationAction, SIGNAL(triggered()), _soundNotificationWidget, SLOT(showMaximized()));
+    connect(_timerSettingsAction, SIGNAL(triggered()), _timerSettingsWidget, SLOT(showMaximized()));
     connect(_vibrationsAction, SIGNAL(triggered(bool)), this, SLOT(VibrationsEnabled(bool)));
     connect(_aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(_quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(_hideAction, SIGNAL(triggered()), this, SLOT(hide()));
+    connect(_hideAction, SIGNAL(triggered()), this, SLOT(lower()));
+
+    /*_textNotificationWidget->hide();
+    _textNotificationWidget->setWindowModality(Qt::WindowModal);
+    _soundNotificationWidget->hide();
+    _soundNotificationWidget->setWindowModality(Qt::WindowModal);
+    _timerSettingsWidget->hide();
+    _timerSettingsWidget->setWindowModality(Qt::WindowModal);*/
 #else
     _ui->tabWidget->addTab(_textNotificationWidget, tr("Text notifications settings"));
     _ui->tabWidget->addTab(_soundNotificationWidget, tr("Sound notification settigns"));
@@ -90,6 +98,7 @@ MakeRT::MakeRT(QWidget *parent):
     connect(_timerSettingsWidget, SIGNAL(ModeChanged(TimerSettingsWidget::Mode)), this, SLOT(SetTimer()));
     connect(_timerSettingsWidget, SIGNAL(FixedIntervalChanged(int)), this, SLOT(SetTimer()));
     connect(_timerSettingsWidget, SIGNAL(RandomIntervalChanged(int,int)), this, SLOT(SetTimer()));
+    connect(_audioOutput, SIGNAL(volumeChanged(qreal)), this, SLOT(VolumeChanged(qreal)));
 
     connect(_timer, SIGNAL(timeout()), this, SLOT(Alarm()));
 
@@ -97,7 +106,9 @@ MakeRT::MakeRT(QWidget *parent):
     SetTimer();
     _soundNotificationWidget->SetAudioOutput(_audioOutput);
 
+#ifndef Q_OS_SYMBIAN
     _trayIcon->show();
+#endif // Q_OS_SYMBIAN
 
     this->adjustSize();
 }
@@ -143,13 +154,13 @@ void MakeRT::LoadSettings()
     int from = _settings->value(RANDOMINTERVALFROM, 10).toInt();
     int to = _settings->value(RANDOMINTERVALTO, 30).toInt();
     _timerSettingsWidget->SetRandomInterval(from, to);
-
 #ifdef Q_OS_SYMBIAN
-    _vibrationsEnabled->setChecked(_settings->value(VIBRATIONSENABLED, true));
+    _vibrationsAction->setChecked(_settings->value(VIBRATIONSENABLED, true).toBool());
 #else
     _ui->startup->setChecked(_settings->value(RUNATSTARTUP, false).toBool());
     _ui->tray->setChecked(_settings->value(RUNINTRAY, false).toBool());
 #endif // Q_OS_SYMBIAN
+    _audioOutput->setVolume(_settings->value(VOLUME, 100.0).toReal());
 }
 
 // SetTimer
@@ -182,7 +193,7 @@ void MakeRT::Alarm()
 #ifdef Q_OS_SYMBIAN
     if (_vibrationsAction->isChecked())
     {
-        _vibrator->StartL(3000);
+        _vibrator->StartVibraL(4000);
     }
 #endif // Q_OS_SYMBIAN
 
@@ -199,6 +210,8 @@ void MakeRT::Alarm()
             message = _textNotificationWidget->GetMessageList()[qrand() % tmp];
         }
         QMessageBox::information(this, tr("Make reality test!"), message);
+        if (_soundNotificationWidget->IsActive())
+            _player->clear();
     }
 
     SetTimer();
@@ -333,3 +346,9 @@ void MakeRT::TrayIconClicked()
 }
 
 #endif // Q_OS_SYMBIAN
+
+// VolumeChanged
+void MakeRT::VolumeChanged(qreal volume)
+{
+    _settings->setValue(VOLUME, volume);
+}

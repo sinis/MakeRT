@@ -3,11 +3,15 @@
 
 // Constructor
 TimerSettingsWidget::TimerSettingsWidget(QWidget *parent):
+    #ifdef Q_OS_SYMBIAN
+    QDialog(parent),
+    #else
     QWidget(parent),
+    #endif // Q_OS_SYMBIAN
     _ui(new Ui::TimerSettingsWidget)
   #ifdef Q_OS_SYMBIAN
-    ,_emptyAction(QAction("", this)),
-    _goBackAction(QAction(tr("Go back", this)))
+    ,_emptyAction(new QAction("", this)),
+    _goBackAction(new QAction(tr("Go back"), this))
   #endif // Q_OS_SYMBIAN
 {
     _ui->setupUi(this);

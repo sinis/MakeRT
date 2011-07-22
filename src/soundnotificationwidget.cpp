@@ -6,7 +6,11 @@
 
 // Constructor
 SoundNotificationWidget::SoundNotificationWidget(QWidget *parent, Phonon::MediaObject *player):
+    #ifdef Q_OS_SYMBIAN
+    QDialog(parent),
+    #else
     QWidget(parent),
+    #endif // Q_OS_SYMBIAN
     _ui(new Ui::SoundNotificationWidget),
     _player(player)
   #ifdef Q_OS_SYMBIAN
@@ -21,7 +25,7 @@ SoundNotificationWidget::SoundNotificationWidget(QWidget *parent, Phonon::MediaO
     addAction(_goBackAction);
     _emptyAction->setSoftKeyRole(QAction::PositiveSoftKey);
     _goBackAction->setSoftKeyRole(QAction::NegativeSoftKey);
-    connect(_goBackAction, SIGNAL(triggered()), this, SLOT(hide)));
+    connect(_goBackAction, SIGNAL(triggered()), this, SLOT(hide()));
 #endif
 
     connect(_ui->enable, SIGNAL(clicked(bool)), this, SLOT(ActivationChange(bool)));
