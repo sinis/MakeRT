@@ -18,6 +18,7 @@
 #include <MediaObject>
 #include <QTimer>
 #include <QSettings>
+#include <QMessageBox>
 #include "textnotificationwidget.h"
 #include "soundnotificationwidget.h"
 #include "timersettingswidget.h"
@@ -95,6 +96,7 @@ private:
     TextNotificationWidget *_textNotificationWidget;
     SoundNotificationWidget *_soundNotificationWidget;
     TimerSettingsWidget *_timerSettingsWidget;
+    QMessageBox *_messageBox;
 #ifndef Q_OS_SYMBIAN
     QSystemTrayIcon *_trayIcon;
 #else

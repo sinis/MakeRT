@@ -1,5 +1,4 @@
 #include "makert.h"
-#include <QMessageBox>
 #ifdef Q_OS_WIN
 #include <windows.h>
 #elif defined Q_OS_LINUX
@@ -20,7 +19,8 @@ MakeRT::MakeRT(QWidget *parent):
     _settings(new QSettings(this)),
     _textNotificationWidget(new TextNotificationWidget(this)),
     _soundNotificationWidget(new SoundNotificationWidget(this, _player)),
-    _timerSettingsWidget(new TimerSettingsWidget(this))
+    _timerSettingsWidget(new TimerSettingsWidget(this)),
+    _messageBox(new QMessageBox(QMessageBox::Information, tr("Make reality test!"), "", QMessageBox::Ok, this))
   #ifndef Q_OS_SYMBIAN
   , _trayIcon(new QSystemTrayIcon(QIcon(":/icon.png"), this))
   #else
@@ -209,10 +209,26 @@ void MakeRT::Alarm()
             int tmp = _textNotificationWidget->GetMessageList().count();
             message = _textNotificationWidget->GetMessageList()[qrand() % tmp];
         }
-        QMessageBox::information(this, tr("Make reality test!"), message);
-        if (_soundNotificationWidget->IsActive())
-            _player->clear();
+        _messageBox->setText(message);
+
+#ifdef Q_OS_SYMBIAN
+        this->raise();
+        _messageBox->raise();
+#endif // Q_OS_SYMBIAN
+
+        _messageBox->exec();
+
+#ifdef Q_OS_SYMBIAN
+        this->lower();
+#endif // Q_OS_SYMBIAN
     }
+
+    if (_soundNotificationWidget->IsActive())
+        _player->clear();
+
+#ifdef Q_OS_SYMBIAN
+    _vibrator->StopVibraL();
+#endif // Q_OS_SYMBIAN
 
     SetTimer();
 }
