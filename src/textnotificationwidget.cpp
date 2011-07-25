@@ -104,5 +104,9 @@ void TextNotificationWidget::ModeChange()
 void TextNotificationWidget::ShowEditor()
 {
     _editor->SetMessageList(_messageList);
+#ifndef Q_OS_SYMBIAN
     _editor->show();
+#else
+    _editor->showMaximized();
+#endif // Q_OS_SYMBIAN
 }

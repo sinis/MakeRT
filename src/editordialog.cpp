@@ -31,10 +31,12 @@ EditorDialog::EditorDialog(QWidget *parent):
     _menu->addAction(_saveAction);
 
     addAction(_menuAction);
+    addAction(_editAction);
     addAction(_cancelAction);
 
     _menuAction->setMenu(_menu);
     _menuAction->setSoftKeyRole(QAction::PositiveSoftKey);
+    _editAction->setSoftKeyRole(QAction::SelectSoftKey);
     _cancelAction->setSoftKeyRole(QAction::NegativeSoftKey);
 
     connect(_addNewAction, SIGNAL(triggered()), this, SLOT(AddNew()));
@@ -43,6 +45,7 @@ EditorDialog::EditorDialog(QWidget *parent):
     connect(_loadAction, SIGNAL(triggered()), this, SLOT(Load()));
     connect(_saveAction, SIGNAL(triggered()), this, SLOT(accept()));
     connect(_cancelAction, SIGNAL(triggered()), this, SLOT(reject()));
+    connect(_ui->messageList, SIGNAL(entered(QModelIndex)), this, SLOT(Edit()));
 #else
     connect(_ui->addNew, SIGNAL(clicked()), this, SLOT(AddNew()));
     connect(_ui->edit, SIGNAL(clicked()), this, SLOT(Edit()));
