@@ -5,6 +5,9 @@
 #include <QFile>
 #include <QDir>
 #endif // Q_OS_WIN
+#ifdef Q_OS_SYMBIAN
+#include <QActionGroup>
+#endif // Q_OS_SYMBIAN
 
 MakeRT *MakeRT::_instance = 0;
 
@@ -26,7 +29,9 @@ MakeRT::MakeRT(QWidget *parent):
   , _textNotificationAction(new QAction(tr("Text notifications"), this)),
     _soundNotificationAction(new QAction(tr("Sound notification"), this)),
     _timerSettingsAction(new QAction(tr("Timer settings"), this)),
-    _vibrationsAction(new QAction(tr("Vibrations"), this)),
+    _vibrationsMenu(new QMenu(tr("Vibrations"), this)),
+    _vibrationsOnAction(new QAction(tr("On"), this)),
+    _vibrationsOffAction(new QAction(tr("Off"), this)),
     _aboutQtAction(new QAction(tr("About Qt4"), this)),
     _quitAction(new QAction(tr("Quit"), this)),
     _menu(new QMenu(this)),
@@ -40,20 +45,25 @@ MakeRT::MakeRT(QWidget *parent):
 
     _ui->setupUi(this);
 
-    LoadSettings();
-
 #ifdef Q_OS_SYMBIAN
     _vibrator = CHWRMVibra::NewL();
+
+    _vibrationsOnAction->setCheckable(true);
+    //_vibrationsOnAction->setChecked(true);
+    _vibrationsOffAction->setCheckable(true);
+    QActionGroup *group = new QActionGroup(this);
+    group->addAction(_vibrationsOnAction);
+    group->addAction(_vibrationsOffAction);
+    _vibrationsMenu->addActions(group->actions());
 
     addAction(_menuAction);
     addAction(_hideAction);
     _menu->addAction(_textNotificationAction);
     _menu->addAction(_soundNotificationAction);
     _menu->addAction(_timerSettingsAction);
-    _menu->addAction(_vibrationsAction);
+    _menu->addMenu(_vibrationsMenu);
     _menu->addAction(_aboutQtAction);
     _menu->addAction(_quitAction);
-    _vibrationsAction->setCheckable(true);
     _menuAction->setMenu(_menu);
     _menuAction->setSoftKeyRole(QAction::PositiveSoftKey);
     _hideAction->setSoftKeyRole(QAction::NegativeSoftKey);
@@ -61,7 +71,8 @@ MakeRT::MakeRT(QWidget *parent):
     connect(_textNotificationAction, SIGNAL(triggered()), _textNotificationWidget, SLOT(showMaximized()));
     connect(_soundNotificationAction, SIGNAL(triggered()), _soundNotificationWidget, SLOT(showMaximized()));
     connect(_timerSettingsAction, SIGNAL(triggered()), _timerSettingsWidget, SLOT(showMaximized()));
-    connect(_vibrationsAction, SIGNAL(triggered(bool)), this, SLOT(VibrationsEnabled(bool)));
+    connect(_vibrationsOnAction, SIGNAL(triggered()), this, SLOT(VibrationsEnabled()));
+    connect(_vibrationsOffAction, SIGNAL(triggered()), this, SLOT(VibrationsEnabled()));
     connect(_aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(_quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(_hideAction, SIGNAL(triggered()), this, SLOT(lower()));
@@ -109,6 +120,7 @@ MakeRT::MakeRT(QWidget *parent):
     _trayIcon->show();
 #endif // Q_OS_SYMBIAN
 
+    LoadSettings();
     this->adjustSize();
 }
 
@@ -126,7 +138,9 @@ MakeRT::~MakeRT()
     delete _textNotificationAction;
     delete _soundNotificationAction;
     delete _timerSettingsAction;
-    delete _vibrationsAction;
+    delete _vibrationsMenu;
+    delete _vibrationsOffAction;
+    delete _vibrationsOnAction;
     delete _aboutQtAction;
     delete _quitAction;
     delete _menu;
@@ -154,7 +168,17 @@ void MakeRT::LoadSettings()
     int to = _settings->value(RANDOMINTERVALTO, 30).toInt();
     _timerSettingsWidget->SetRandomInterval(from, to);
 #ifdef Q_OS_SYMBIAN
-    _vibrationsAction->setChecked(_settings->value(VIBRATIONSENABLED, true).toBool());
+    bool vibrations = _settings->value(VIBRATIONSENABLED, true).toBool();
+    if (vibrations)
+    {
+        //_vibrationsOnAction->activate(QAction::Trigger);
+        _vibrationsOnAction->setChecked(true);
+    }
+    else
+    {
+        //_vibrationsOffAction->activate(QAction::Trigger);
+        _vibrationsOffAction->setChecked(true);
+    }
 #else
     _ui->startup->setChecked(_settings->value(RUNATSTARTUP, false).toBool());
     _ui->tray->setChecked(_settings->value(RUNINTRAY, false).toBool());
@@ -190,7 +214,7 @@ void MakeRT::Alarm()
     }
 
 #ifdef Q_OS_SYMBIAN
-    if (_vibrationsAction->isChecked())
+    if (_vibrationsOnAction->isChecked())
     {
         _vibrator->StartVibraL(4000);
     }
@@ -289,8 +313,9 @@ void MakeRT::RandomIntervalChanged(int from, int to)
 
 // VibrationsEnabled
 #ifdef Q_OS_SYMBIAN
-void MakeRT::VibrationsEnabled(bool vibrations)
+void MakeRT::VibrationsEnabled()
 {
+    bool vibrations = _vibrationsOnAction->isChecked();
     _settings->setValue(VIBRATIONSENABLED, vibrations);
 }
 #else

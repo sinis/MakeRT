@@ -77,7 +77,7 @@ private slots:
     void TimerModeChanged(TimerSettingsWidget::Mode);
 
 #ifdef Q_OS_SYMBIAN
-    void VibrationsEnabled(bool);
+    void VibrationsEnabled();
 #else
     void RunAtStartupEnabled(bool);
     void RunInTrayEnabled(bool);
@@ -103,7 +103,9 @@ private:
     QAction *_textNotificationAction;
     QAction *_soundNotificationAction;
     QAction *_timerSettingsAction;
-    QAction *_vibrationsAction;
+    QMenu *_vibrationsMenu;
+    QAction *_vibrationsOnAction;
+    QAction *_vibrationsOffAction;
     QAction *_aboutQtAction;
     QAction *_quitAction;
     QMenu *_menu;
