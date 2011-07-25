@@ -33,7 +33,7 @@ public:
     TimerSettingsWidget::Mode GetTimerMode();
     void SetTimerMode(Mode timerMode);
     int GetFixedInterval() const { return _ui->interval->value(); }
-    void SetFixedInterval(int interval) { _ui->interval->setValue(interval); }
+    void SetFixedInterval(int interval);
     int GetRandomIntervalFrom() const { return _ui->randomFrom->value(); }
     int GetRandomIntervalTo() const { return _ui->randomTo->value(); }
     void SetRandomInterval(int from, int to);

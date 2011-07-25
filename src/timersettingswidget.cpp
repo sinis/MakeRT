@@ -53,6 +53,8 @@ TimerSettingsWidget::Mode TimerSettingsWidget::GetTimerMode()
 // Takes mode from parameter and sets UI.
 void TimerSettingsWidget::SetTimerMode(Mode timerMode)
 {
+    if (timerMode == GetTimerMode())
+        return;
     switch (timerMode)
     {
     case FixedInterval:
@@ -62,6 +64,12 @@ void TimerSettingsWidget::SetTimerMode(Mode timerMode)
         _ui->randomInterval->setChecked(true);
         break;
     }
+}
+
+// SetFixedInterva
+void TimerSettingsWidget::SetFixedInterval(int interval)
+{
+    _ui->interval->setValue(interval);
 }
 
 // SetRandomInterval
@@ -80,23 +88,24 @@ void TimerSettingsWidget::FixedIntervalChange(int interval)
 // RandomIntervalChangeFrom
 void TimerSettingsWidget::RandomIntervalChangeFrom(int from)
 {
-    if (from >= this->GetRandomIntervalTo())
+    _ui->randomTo->setMinimum(from+1);
+    /*if (from >= this->GetRandomIntervalTo())
     {
         QMessageBox::warning(this, tr("Warning!"), tr("Wrong interval! First value must be lower than the second."));
         return;
-    }
+    }*/
     emit RandomIntervalChanged(from, GetRandomIntervalFrom());
 }
 
 // RandomIntervalChangeTo
 void TimerSettingsWidget::RandomIntervalChangeTo(int to)
 {
-    if (to <= this->GetRandomIntervalFrom())
+    /*if (to <= this->GetRandomIntervalFrom())
     {
         QMessageBox::warning(this, tr("Warning!"), tr("Wrong interval! First value must be lower than the second."));
         return;
-    }
-    emit RandomIntervalChangeTo(to);
+    }*/
+    emit RandomIntervalChanged(GetRandomIntervalFrom(), to);
 }
 
 // ModeChange

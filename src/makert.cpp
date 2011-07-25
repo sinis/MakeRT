@@ -5,7 +5,6 @@
 #include <QFile>
 #include <QDir>
 #endif // Q_OS_WIN
-#include <QDesktopWidget>
 
 MakeRT *MakeRT::_instance = 0;
 
