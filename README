@@ -1,0 +1,7 @@
+MakeRT is a simple application dedicated to a newbie lucid dreamers (http://en.wikipedia.org/wiki/Lucid_dream). It helps to reach a lucid dream by forming a habit of making reality checks.
+
+Features: 
+text notifications (single or randomly selected from list) 
+sound notification (by plaing audio file) 
+vibrations (only on Symbian) 
+fixed or random interval between following notifications

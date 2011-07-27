@@ -153,6 +153,8 @@ void EditorDialog::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Delete:
         Remove();
         break;
+    default:
+        this->keyPressEvent(event);
     }
 }
 

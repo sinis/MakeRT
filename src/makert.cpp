@@ -121,6 +121,12 @@ MakeRT::MakeRT(QWidget *parent):
 #endif // Q_OS_SYMBIAN
 
     LoadSettings();
+    _ui->about->setHtml(tr("<b>MakeRT</b> is a simple application dedicated to a newbie lucid dreamers (<a href=\"http://en.wikipedia.org/wiki/Lucid_dream\">http://en.wikipedia.org/wiki/Lucid_dream</a>). It helps to reach a lucid dream by forming a habit of making reality checks.<br><br>\n"
+                           "<b>Features:</b>\n"
+                           "<ul><li>text notifications (single or randomly selected from list)\n"
+                           "<li>sound notification (by plaing audio file)\n"
+                           "<li>vibrations (only on Symbian)\n"
+                           "<li>fixed or random interval between following notifications</ul>"));
     this->adjustSize();
 }
 
