@@ -77,12 +77,7 @@ MakeRT::MakeRT(QWidget *parent):
     connect(_quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(_hideAction, SIGNAL(triggered()), this, SLOT(lower()));
 
-    /*_textNotificationWidget->hide();
-    _textNotificationWidget->setWindowModality(Qt::WindowModal);
-    _soundNotificationWidget->hide();
-    _soundNotificationWidget->setWindowModality(Qt::WindowModal);
-    _timerSettingsWidget->hide();
-    _timerSettingsWidget->setWindowModality(Qt::WindowModal);*/
+    _ui->about->setFocus();
 #else
     _ui->tabWidget->addTab(_textNotificationWidget, tr("Text notifications settings"));
     _ui->tabWidget->addTab(_soundNotificationWidget, tr("Sound notification settigns"));

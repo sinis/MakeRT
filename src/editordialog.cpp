@@ -94,7 +94,7 @@ void EditorDialog::AddNew()
 {
     bool ok;
     QString text = QInputDialog::getText(this, tr("New notification"), tr("Message:"), QLineEdit::Normal, QString(), &ok);
-    if (ok)
+    if (ok && !text.isEmpty())
     {
         _ui->messageList->addItem(text);
     }
@@ -107,7 +107,7 @@ void EditorDialog::Edit()
     //int current = _ui->messageList->currentRow();
     QString text = _ui->messageList->currentItem()->text();
     text = QInputDialog::getText(this, tr("Edit notification"), tr("Message:"), QLineEdit::Normal, text, &ok);
-    if (ok)
+    if (ok && !text.isEmpty())
     {
         _ui->messageList->currentItem()->setText(text);
     }
@@ -153,8 +153,11 @@ void EditorDialog::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Delete:
         Remove();
         break;
+    case Qt::Key_Enter:
+        Edit();
+        break;
     default:
-        this->keyPressEvent(event);
+        QDialog::keyPressEvent(event);
     }
 }
 
