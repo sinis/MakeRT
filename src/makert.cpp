@@ -123,6 +123,7 @@ MakeRT::MakeRT(QWidget *parent):
                            "<li>vibrations (only on Symbian)\n"
                            "<li>fixed or random interval between following notifications</ul>"));
     this->adjustSize();
+    this->setWindowIcon(QIcon(":/icon.png"));
 }
 
 // Destructor
@@ -393,3 +394,21 @@ void MakeRT::VolumeChanged(qreal volume)
 {
     _settings->setValue(VOLUME, volume);
 }
+
+#ifdef Q_OS_SYMBIAN
+// keyPressEvent
+void MakeRT::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key())
+    {
+    case Qt::Key_Up:
+        _ui->about->moveCursor(QTextCursor::PreviousBlock);
+        break;
+    case Qt::Key_Down:
+        _ui->about->moveCursor(QTextCursor::NextBlock);
+        break;
+    default:
+        QWidget::keyPressEvent(event);
+    }
+}
+#endif // Q_OS_SYMBIAN

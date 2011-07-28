@@ -28,7 +28,14 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QTextBrowser" name="about"/>
+        <widget class="QTextBrowser" name="about">
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+         <property name="openLinks">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

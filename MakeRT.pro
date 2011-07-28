@@ -31,6 +31,7 @@ symbian: {
     FORMS += ui/soundnotificationwidget_s60.ui \
              ui/editordialog_s60.ui \
              ui/makert_s60.ui
+    ICON = res/icon_s60.svg
 }
 
 !symbian: {
@@ -38,3 +39,8 @@ symbian: {
              ui/editordialog.ui \
              ui/makert.ui
 }
+
+win32:RC_FILE = res/icon.rc
+
+RESOURCES += \
+    res/res.qrc

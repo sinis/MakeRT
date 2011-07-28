@@ -86,6 +86,11 @@ private slots:
 
     void VolumeChanged(qreal volume);
 
+#ifdef Q_OS_SYMBIAN
+protected:
+    void keyPressEvent(QKeyEvent *event);
+#endif // Q_OS_SYMBIAN
+
 private:
     static MakeRT *_instance;
     Ui::MakeRT *_ui;
