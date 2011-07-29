@@ -44,3 +44,4 @@ win32:RC_FILE = res/icon.rc
 
 RESOURCES += \
     res/res.qrc
+TRANSLATIONS += res/makert_pl.ts

@@ -121,9 +121,11 @@ MakeRT::MakeRT(QWidget *parent):
                            "<ul><li>text notifications (single or randomly selected from list)\n"
                            "<li>sound notification (by plaing audio file)\n"
                            "<li>vibrations (only on Symbian)\n"
-                           "<li>fixed or random interval between following notifications</ul>"));
+                           "<li>fixed or random interval between following notifications</ul><br><br>\n"
+                           "<a href=\"mailto:m.siniss@gmail.com\">m.siniss@gmail.com</a>"));
     this->adjustSize();
     this->setWindowIcon(QIcon(":/icon.png"));
+    this->setWindowTitle(QString("MakeRT v.") + qApp->applicationVersion());
 }
 
 // Destructor

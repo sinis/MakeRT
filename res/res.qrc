@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>icon.png</file>
+        <file>makert_pl.qm</file>
     </qresource>
 </RCC>
