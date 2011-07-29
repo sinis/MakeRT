@@ -187,7 +187,13 @@
 &lt;li&gt;vibrations (only on Symbian)
 &lt;li&gt;fixed or random interval between following notifications&lt;/ul&gt;&lt;br&gt;&lt;br&gt;
 &lt;a href=&quot;mailto:m.siniss@gmail.com&quot;&gt;m.siniss@gmail.com&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;b&gt;MakeRT&lt;/b&gt; to prosta aplikacja przeznaczona dla początkujących oneironautów (&lt;a href=&quot;http://pl.wikipedia.org/wiki/%C5%9Awiadomy_sen&quot;&gt;http://pl.wikipedia.org/wiki/%C5%9Awiadomy_sen&lt;/a&gt;). Pomaga ona w wyrobieniu sobie nawyku wykonywania testów rzeczywistości, co zwiększa szanse osiągnięcia świadomego snu.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Funkcje:&lt;/b&gt;
+&lt;ul&gt;&lt;li&gt;powiadomienia tekstowe (jedno lub losowane z listy)
+&lt;li&gt;powiadomienie dźwiękowe (odtworzenie pliku audio)
+&lt;li&gt;wibracje (tylko na Symbianie)
+&lt;li&gt;stały lub losowy interwał pomiędzy kolejnymi powiadomieniami&lt;/ul&gt;&lt;br&gt;&lt;br&gt;
+&lt;a href=&quot;mailto:m.siniss@gmail.com&quot;&gt;m.siniss@gmail.com&lt;/a&gt;</translation>
     </message>
     <message>
         <source>&lt;b&gt;MakeRT&lt;/b&gt; is a simple application dedicated to a newbie lucid dreamers (&lt;a href=&quot;http://en.wikipedia.org/wiki/Lucid_dream&quot;&gt;http://en.wikipedia.org/wiki/Lucid_dream&lt;/a&gt;). It helps to reach a lucid dream by forming a habit of making reality checks.&lt;br&gt;&lt;br&gt;
